@@ -1,0 +1,56 @@
+before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - chmod +x ./gradlew
+    - REPORT_DIR=/home/gitlab-runner/reports
+    - REPORT_OUTPUTPATH=$REPORT_DIR/$(pwd | sed -E 's/\/home\/gitlab-runner\/builds\/[a-z0-9]*\/[0-9]\/([0-9a-z]*)\/([0-9a-z]*).*/\1\/\2/g')/$(git rev-parse --short HEAD)
+    - mkdir -p $REPORT_OUTPUTPATH
+
+stages:
+  - build
+  - test
+  - additional
+  - deploy
+
+cache:
+  paths:
+     - .gradle/wrapper
+     - .gradle/caches
+
+build:
+  stage: build
+  script:
+     - ./gradlew assemble
+check:
+  stage: test
+  script:
+     - ./gradlew check
+
+full:
+  stage: test
+  script:
+    - ./gradlew build
+
+
+lint_checkstyle:
+  stage: test
+  script:
+    - CHECKSTYLE_HOME=/usr/local/share/checkstyle
+    - $CHECKSTYLE_HOME/run_checkstyle $CHECKSTYLE_HOME $REPORT_OUTPUTPATH
+    
+lint_findbugs:
+  stage: test
+  script:
+    - FINDBUGS_HOME=/usr/local/share/findbugs 
+    - $FINDBUGS_HOME/run_findbugs $FINDBUGS_HOME $REPORT_OUTPUTPATH
+
+lint_pmd:
+  stage: test
+  script:
+    - PMD_HOME=/usr/local/share/pmd
+    - $PMD_HOME/run_pmd $PMD_HOME $REPORT_OUTPUTPATH
+
+additional_tasks:
+  stage: additional
+  script: 
+    - TASKS_HOME=/usr/local/share/db2tasks
+    - $TASKS_HOME/run_tasks $TASKS_HOME $REPORT_OUTPUTPATH

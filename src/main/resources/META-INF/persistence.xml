@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
+  <persistence-unit name="defaultPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <!-- put your entity-classes here -->
+    <class>de.h_da.fbi.db2.entity.Category</class>
+    <class>de.h_da.fbi.db2.entity.Question</class>
+    <class>de.h_da.fbi.db2.entity.Answer</class>
+    <class>de.h_da.fbi.db2.entity.Player</class>
+    <class>de.h_da.fbi.db2.entity.GameInformation</class>
+    <!-- this must be provided -->
+    <class>de.h_da.fbi.db2.persistence.LocalDateTimeConverter</class>
+    <class>de.h_da.fbi.db2.persistence.InstantConverter</class>
+    <shared-cache-mode>ALL</shared-cache-mode>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@141.100.70.17:1521:orcl"/>
+      <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+      <property name="javax.persistence.jdbc.user" value="studd1x2"/>
+      <property name="javax.persistence.jdbc.password" value="studd"/>
+      <property name="eclipselink.logging.level" value="WARNING"/>
+      <property name="eclipselink.logging.exceptions" value="false"/>
+      <property name="eclipselink.logging.level.sql" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.logging.timestamp" value="false"/>
+      <property name="eclipselink.logging.session" value="false"/>
+      <property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
+      <property name="eclipselink.jdbc.batch-writing.size" value="1000"/>
+      <property name="eclipselink.cache.shared.default" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>

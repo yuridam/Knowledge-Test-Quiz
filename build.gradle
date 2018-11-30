@@ -1,0 +1,55 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+// if you are using Eclipse
+if(file('.project').isFile()) {
+    println 'Detected an Eclipse project, applying appropriate plugin ...'
+    apply plugin: 'eclipse'
+    eclipse {
+        classpath {
+            downloadSources = true
+        }
+    }
+}
+// if you are using IDEA
+else if(file('.idea').isDirectory()) {
+    println 'Detected an IDEA project, applying appropriate plugin ...'
+    apply plugin: 'idea'
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+} else {
+    println 'Detected a NetBeans project, applying appropriate plugin if any ...'
+}
+
+group 'de.h_da.fbi.db2'
+version projectVersion
+
+sourceCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
+targetCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+// NetBeans will automatically add "run" and "debug" tasks relying on the
+// "mainClass" property. You may however define the property prior executing
+// tasks by passing a "-PmainClass=<QUALIFIED_CLASS_NAME>" argument.
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'de.h_da.fbi.db2.stud.Main'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    //JPA default implementation
+    compile 'org.eclipse.persistence:eclipselink:2.6.4'
+    //Oracle JDBC Driver and any other libraries from 'libs' folder
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    //Libraries for testing
+    testCompile 'junit:junit:4.12'
+}
